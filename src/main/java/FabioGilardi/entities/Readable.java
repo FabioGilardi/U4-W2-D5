@@ -5,9 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 
 public abstract class Readable {
@@ -41,7 +39,8 @@ public abstract class Readable {
                 case 1: {
                     System.out.println("Insert the isbn: ");
                     long isbn = Long.parseLong(myScanner.nextLine());
-                    if (isbn < 0) {
+                    if (isbn <= 0 || isbn >= 10000000) {
+                        logger.error("The number must be over 0 and under 10000000!");
                         continue;
                     }
                     try {
@@ -77,7 +76,8 @@ public abstract class Readable {
                 case 1: {
                     System.out.println("Insert the isbn: ");
                     long isbn = Long.parseLong(myScanner.nextLine());
-                    if (isbn < 0) {
+                    if (isbn <= 0 || isbn >= 10000000) {
+                        logger.error("The number must be over 0 and under 10000000!");
                         continue;
                     }
                     try {
@@ -117,9 +117,12 @@ public abstract class Readable {
                         logger.error("The year must be between 0 and 2024");
                         continue;
                     }
-                    Map<Integer, List<Readable>> elementsByYear = list.stream().filter(readable -> readable.getPublicationDate() == year).collect(Collectors.groupingBy(Readable::getPublicationDate));
-                    System.out.println("These are the elements published in year " + year + ":");
-                    elementsByYear.forEach((integer, list1) -> System.out.println(list1));
+                    List<Readable> elementsByYear = list.stream().filter(readable -> readable.getPublicationDate() == year).toList();
+                    if (!elementsByYear.isEmpty()) {
+                        elementsByYear.forEach(System.out::println);
+                    } else {
+                        System.out.println("No element has been found");
+                    }
                     break;
                 }
                 case 0: {

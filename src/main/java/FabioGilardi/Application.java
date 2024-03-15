@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -81,6 +82,7 @@ public class Application {
 
                 case 0: {
                     System.out.println("Programme is shutting down");
+                    System.out.println("Created by @Fabio Gilardi " + LocalDate.now().getYear());
                     break;
                 }
 
@@ -141,13 +143,22 @@ public class Application {
                     System.out.println("You choose to add a book");
                     System.out.println("Insert the ISBN");
                     long isbn = Long.parseLong(myScanner.nextLine());
+                    if (isbn <= 0 || isbn >= 10000000) {
+                        logger.error("The number must be over 0 and under 10000000!");
+                        continue;
+                    }
                     System.out.println("Insert the title");
                     String title = myScanner.nextLine();
                     System.out.println("Insert the publication date");
                     int publicationDate = Integer.parseInt(myScanner.nextLine());
+                    if (publicationDate <= 0 || publicationDate >= 2024) {
+                        logger.error("The number must be over 0 and under 2024!");
+                        continue;
+                    }
                     System.out.println("Insert the pages");
                     int pages = Integer.parseInt(myScanner.nextLine());
                     if (pages <= 0) {
+                        logger.error("The number must be over 0!");
                         continue;
                     }
                     System.out.println("Insert the author");
@@ -163,13 +174,22 @@ public class Application {
                     System.out.println("You choose to add a magazine");
                     System.out.println("Insert the ISBN");
                     long isbn = Long.parseLong(myScanner.nextLine());
+                    if (isbn <= 0 || isbn >= 10000000) {
+                        logger.error("The number must be over 0 and under 10000000!");
+                        continue;
+                    }
                     System.out.println("Insert the title");
                     String title = myScanner.nextLine();
                     System.out.println("Insert the publication date");
                     int publicationDate = Integer.parseInt(myScanner.nextLine());
+                    if (publicationDate <= 0 || publicationDate >= 2024) {
+                        logger.error("The number must be over 0 and under 2024!");
+                        continue;
+                    }
                     System.out.println("Insert the pages");
                     int pages = Integer.parseInt(myScanner.nextLine());
                     if (pages <= 0) {
+                        logger.error("The number must be over 0!");
                         continue;
                     }
                     int randomPeriodicity = random.nextInt(0, 3);
@@ -229,6 +249,7 @@ public class Application {
             String[] singleMagazineArray = s.split("@");
             archiveFile.add(new Magazine(Long.parseLong(singleMagazineArray[0]), singleMagazineArray[1], Integer.parseInt(singleMagazineArray[2]), Integer.parseInt(singleMagazineArray[3]), Periodicity.valueOf(singleMagazineArray[4])));
         }
+        System.out.println("File uploaded correctly");
         return archiveFile;
     }
 }
