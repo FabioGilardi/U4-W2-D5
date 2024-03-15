@@ -119,6 +119,7 @@ public abstract class Readable {
                     }
                     List<Readable> elementsByYear = list.stream().filter(readable -> readable.getPublicationDate() == year).toList();
                     if (!elementsByYear.isEmpty()) {
+                        System.out.println("These are the elements published in year:" + year);
                         elementsByYear.forEach(System.out::println);
                     } else {
                         System.out.println("No element has been found");

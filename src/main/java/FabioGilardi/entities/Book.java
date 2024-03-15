@@ -5,10 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class Book extends Readable {
 
@@ -36,9 +34,13 @@ public class Book extends Readable {
                 case 1: {
                     System.out.println("Insert the author: ");
                     String author = myScanner.nextLine();
-                    Map<String, List<Readable>> bookList = list.stream().filter(readable -> readable instanceof Book).filter(book -> ((Book) book).getAuthor().toLowerCase().equals(author)).collect(Collectors.groupingBy(book -> ((Book) book).getAuthor().toLowerCase()));
-                    System.out.println("These are the elements published by this author " + author + ":");
-                    bookList.forEach((s, list1) -> System.out.println(s + " " + list1));
+                    List<Readable> bookList = list.stream().filter(readable -> readable instanceof Book).filter(book -> ((Book) book).getAuthor().toLowerCase().equals(author)).toList();
+                    if (!bookList.isEmpty()) {
+                        System.out.println("These are the elements published by:" + author);
+                        bookList.forEach(System.out::println);
+                    } else {
+                        System.out.println("No element has been found");
+                    }
                     break;
                 }
                 case 0: {
