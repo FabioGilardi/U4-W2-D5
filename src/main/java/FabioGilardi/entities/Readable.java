@@ -47,6 +47,7 @@ public abstract class Readable {
                         Readable elementToRemove = list.stream().filter(readable -> readable.getIsbn() == isbn).toList().get(0);
                         list.remove(elementToRemove);
                         System.out.println("Element removed correctly");
+                        list.forEach(System.out::println);
                     } catch (ArrayIndexOutOfBoundsException e) {
                         System.out.println("No element has been found");
                         continue;
@@ -61,7 +62,6 @@ public abstract class Readable {
                     logger.error("You must choose a correct value to proceed!");
                 }
             }
-
         }
     }
 
