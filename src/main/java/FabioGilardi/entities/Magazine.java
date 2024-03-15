@@ -1,8 +1,14 @@
 package FabioGilardi.entities;
 
+import FabioGilardi.Application;
 import FabioGilardi.enums.Periodicity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Magazine extends Readable {
+
+    private static Logger logger = LoggerFactory.getLogger(Application.class);
+
 
     //    ATTRIBUTES
     protected Periodicity periodicity;
@@ -14,6 +20,7 @@ public class Magazine extends Readable {
     }
 
     //    METHODS
+    
     public Periodicity getPeriodicity() {
         return periodicity;
     }
@@ -36,5 +43,6 @@ public class Magazine extends Readable {
         Magazine magazine = (Magazine) o;
         return periodicity == magazine.periodicity;
     }
+
 
 }

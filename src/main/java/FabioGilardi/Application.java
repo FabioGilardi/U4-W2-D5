@@ -5,16 +5,18 @@ import FabioGilardi.entities.Magazine;
 import FabioGilardi.entities.Readable;
 import FabioGilardi.enums.Periodicity;
 import com.github.javafaker.Faker;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.function.Supplier;
-
-import static FabioGilardi.entities.Readable.searchByYear;
+import java.util.stream.Collectors;
 
 public class Application {
 
@@ -32,22 +34,58 @@ public class Application {
 
         storeList.forEach(System.out::println);
 
-//        AGGIUNTA DI UN ELEMENTO
-//        addAnElement(storeList);
-//        storeList.forEach(System.out::println);
+//        INTERFACCIA UTENTE
+        Scanner scanner = new Scanner(System.in);
+        int chosenValue = -1;
+        while (chosenValue != 0) {
+            System.out.println("Choose 1 to add an element");
+            System.out.println("Choose 2 to remove an element");
+            System.out.println("Choose 3 to search an element with ISBN");
+            System.out.println("Choose 4 to search an element by publication date");
+            System.out.println("Choose 5 to search a book by author");
+            System.out.println("Choose 6 to save the archive on disk");
+            System.out.println("Choose 0 to close the programme");
+            chosenValue = Integer.parseInt(scanner.nextLine());
+            switch (chosenValue) {
+                case 1: {
+                    addAnElement(storeList);
+                    break;
+                }
+                case 2: {
+                    Readable.removeAnElement(storeList);
+                    break;
+                }
 
+                case 3: {
+                    Readable.searchByIsbn(storeList);
+                    break;
+                }
 
-//        ELIMINAZIONE DI UN ELEMENTO
-//        removeAnElement(storeList);
-//        storeList.forEach(System.out::println);
+                case 4: {
+                    Readable.searchByYear(storeList);
+                    break;
+                }
 
-//        RICERCA PER ISBN
-//        searchByIsbn(storeList);
+                case 5: {
+                    Book.searchByAuthor(storeList);
+                    break;
+                }
 
-//        RICERCA PER ANNO
-        searchByYear(storeList);
-        storeList.forEach(System.out::println);
+                case 6: {
+                    saveOnDisk(storeList);
+                    break;
+                }
 
+                case 0: {
+                    System.out.println("Programme is shutting down");
+                    break;
+                }
+
+                default: {
+                    logger.error("You must insert a value between 0 and 8");
+                }
+            }
+        }
     }
 
     public static Supplier<Book> bookSupplier() {
@@ -149,7 +187,22 @@ public class Application {
                 }
             }
         }
+
     }
 
+    public static void saveOnDisk(List<Readable> list) {
+        File file = new File("src/archive.txt");
+        List<Readable> bookList = list.stream().filter(readable -> readable instanceof Book).toList();
+        List<Readable> magazineList = list.stream().filter(readable -> readable instanceof Magazine).toList();
+        String bookListString = bookList.stream().map(book -> book.getIsbn() + "@" + book.getTitle() + "@" + book.getPublicationDate() + "@" + book.getPagesNumber() + "@" + ((Book) book).getAuthor() + "@" + ((Book) book).getGenre()).collect(Collectors.joining("#"));
+        String magazineListString = magazineList.stream().map(magazine -> magazine.getIsbn() + "@" + magazine.getTitle() + "@" + magazine.getPublicationDate() + "@" + magazine.getPagesNumber() + "@" + ((Magazine) magazine).getPeriodicity()).collect(Collectors.joining("#"));
+        String finalString = bookListString + "//" + magazineListString;
+        try {
+            FileUtils.writeStringToFile(file, finalString, "UTF-8");
+            System.out.println("File saved correctly");
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
 
+    }
 }

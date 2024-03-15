@@ -130,9 +130,9 @@ public abstract class Readable {
                     logger.error("You must choose a correct value to proceed!");
                 }
             }
-
         }
     }
+
 
     public long getIsbn() {
         return isbn;
