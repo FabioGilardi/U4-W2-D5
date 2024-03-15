@@ -36,7 +36,7 @@ public class Book extends Readable {
                 case 1: {
                     System.out.println("Insert the author: ");
                     String author = myScanner.nextLine();
-                    Map<String, List<Readable>> bookList = list.stream().filter(readable -> readable instanceof Book).filter(book -> ((Book) book).getAuthor().equals(author)).collect(Collectors.groupingBy(book -> ((Book) book).getAuthor()));
+                    Map<String, List<Readable>> bookList = list.stream().filter(readable -> readable instanceof Book).filter(book -> ((Book) book).getAuthor().toLowerCase().equals(author)).collect(Collectors.groupingBy(book -> ((Book) book).getAuthor().toLowerCase()));
                     System.out.println("These are the elements published by this author " + author + ":");
                     bookList.forEach((s, list1) -> System.out.println(s + " " + list1));
                     break;

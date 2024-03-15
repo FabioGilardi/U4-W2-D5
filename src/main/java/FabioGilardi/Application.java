@@ -11,10 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -44,6 +41,7 @@ public class Application {
             System.out.println("Choose 4 to search an element by publication date");
             System.out.println("Choose 5 to search a book by author");
             System.out.println("Choose 6 to save the archive on disk");
+            System.out.println("Choose 7 to load the archive from disk");
             System.out.println("Choose 0 to close the programme");
             chosenValue = Integer.parseInt(scanner.nextLine());
             switch (chosenValue) {
@@ -73,6 +71,11 @@ public class Application {
 
                 case 6: {
                     saveOnDisk(storeList);
+                    break;
+                }
+
+                case 7: {
+                    loadFromDisk().forEach(System.out::println);
                     break;
                 }
 
@@ -114,7 +117,7 @@ public class Application {
             int randomPages = random.nextInt(40, 101);
             int randomPeriodicity = random.nextInt(0, 3);
             List<Periodicity> periodicityList = new ArrayList<>();
-            periodicityList.add(Periodicity.SEMESTRAL);
+            periodicityList.add(Periodicity.WEEKLY);
             periodicityList.add(Periodicity.MONTHLY);
             periodicityList.add(Periodicity.SEMESTRAL);
             return new Magazine(randomIsbn, randomTitle, randomDate, randomPages, periodicityList.get(randomPeriodicity));
@@ -204,5 +207,28 @@ public class Application {
             System.out.println(e.getMessage());
         }
 
+    }
+
+    public static List<Readable> loadFromDisk() {
+        List<Readable> archiveFile = new ArrayList<>();
+        File file = new File("src/archive.txt");
+        String stringFromDisk = "";
+        try {
+            stringFromDisk = FileUtils.readFileToString(file, "UTF-8");
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        String[] booksList = stringFromDisk.split("//")[0].split("#");
+        String[] magazineList = stringFromDisk.split("//")[1].split("#");
+        System.out.println(Arrays.toString(magazineList));
+        for (String string : booksList) {
+            String[] singleBookArray = string.split("@");
+            archiveFile.add(new Book(Long.parseLong(singleBookArray[0]), singleBookArray[1], Integer.parseInt(singleBookArray[2]), Integer.parseInt(singleBookArray[3]), singleBookArray[4], singleBookArray[5]));
+        }
+        for (String s : magazineList) {
+            String[] singleMagazineArray = s.split("@");
+            archiveFile.add(new Magazine(Long.parseLong(singleMagazineArray[0]), singleMagazineArray[1], Integer.parseInt(singleMagazineArray[2]), Integer.parseInt(singleMagazineArray[3]), Periodicity.valueOf(singleMagazineArray[4])));
+        }
+        return archiveFile;
     }
 }
