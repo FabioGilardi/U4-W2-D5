@@ -46,6 +46,8 @@ public class Application {
 
 //        RICERCA PER ANNO
         searchByYear(storeList);
+        storeList.forEach(System.out::println);
+
     }
 
     public static Supplier<Book> bookSupplier() {
